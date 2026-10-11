@@ -49,7 +49,7 @@ function wsl_component_watchdog_files()
 				$wp_upload_dir = wp_upload_dir();
 				$wsl_path = $wp_upload_dir['basedir'] . '/wordpress-social-login';
 
-				$selected = isset( $_REQUEST['log_file'] ) ? $_REQUEST['log_file'] : '';
+				$selected = isset( $_REQUEST['log_file'] ) ? sanitize_file_name( wp_unslash( $_REQUEST['log_file'] ) ) : '';
 
 				$files = scandir( $wsl_path );
 
@@ -60,7 +60,7 @@ function wsl_component_watchdog_files()
 							continue;
 
 						?>
-							<option value="<?php echo $file; ?>" <?php if( $selected == $file ) echo 'selected'; ?>><?php echo $file; ?></option>
+							<option value="<?php echo esc_attr( $file ); ?>" <?php if( $selected === $file ) echo 'selected'; ?>><?php echo esc_html( $file ); ?></option>
 						<?php
 					}
 			?>
@@ -69,7 +69,18 @@ function wsl_component_watchdog_files()
 		<input type="submit" value="<?php _wsl_e("View", 'wordpress-social-login') ?>" class="button">
 	</form>
 
-	<textarea rows="25" cols="70" wrap="off" style="width:100%;height:580px;margin-bottom:15px;white-space: nowrap;font-family: monospace;font-size: 12px;"><?php if( $selected && file_exists( $wsl_path . '/' . $selected ) ) echo file_get_contents( $wsl_path . '/' . $selected ); ?></textarea>
+	<textarea rows="25" cols="70" wrap="off" style="width:100%;height:580px;margin-bottom:15px;white-space: nowrap;font-family: monospace;font-size: 12px;"><?php
+		if ( $selected ) {
+			$wsl_log_file = realpath( $wsl_path . '/' . $selected );
+			$wsl_root     = realpath( $wsl_path );
+
+			// SECURITY: only ever read a regular file that resolves to a direct child of the
+			// WSL log directory. Prevents path traversal (e.g. log_file=../../../../wp-config.php).
+			if ( $wsl_log_file && $wsl_root && strpos( $wsl_log_file, $wsl_root . DIRECTORY_SEPARATOR ) === 0 && is_file( $wsl_log_file ) ) {
+				echo esc_textarea( file_get_contents( $wsl_log_file ) );
+			}
+		}
+	?></textarea>
 </div>
 <?php
 }
