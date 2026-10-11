@@ -79,7 +79,7 @@ if( ! function_exists( 'wsl_render_redirect_to_provider_loading_screen' ) )
 		<div>
 			<img src="<?php echo $assets_base_url ?>spinner.gif" />
 
-			<h1><?php echo sprintf( _wsl__( "Contacting <b>%s</b>, please wait...", 'wordpress-social-login'), _wsl__( $provider_name, 'wordpress-social-login') )  ?></h1>
+			<h1><?php echo sprintf( _wsl__( "Contacting <b>%s</b>, please wait...", 'wordpress-social-login'), esc_html( _wsl__( $provider_name, 'wordpress-social-login') ) )  ?></h1>
 		</div>
 	</body>
 </html>
@@ -158,7 +158,7 @@ if( ! function_exists( 'wsl_render_return_from_provider_loading_screen' ) )
 							{
 								window.opener.wsl_wordpress_social_login({
 									'action'   : 'wordpress_social_authenticated',
-									'provider' : '<?php echo $provider ?>'
+									'provider' : '<?php echo esc_js( $provider ) ?>'
 								});
 
 								window.close();
@@ -187,7 +187,7 @@ if( ! function_exists( 'wsl_render_return_from_provider_loading_screen' ) )
 
 		<form name="loginform" method="post" action="<?php echo $authenticated_url; ?>">
 			<input type="hidden" id="redirect_to" name="redirect_to" value="<?php echo esc_url( $redirect_to ); ?>">
-			<input type="hidden" id="provider" name="provider" value="<?php echo $provider ?>">
+			<input type="hidden" id="provider" name="provider" value="<?php echo esc_attr( $provider ) ?>">
 			<input type="hidden" id="action" name="action" value="wordpress_social_authenticated">
 		</form>
 	</body>
