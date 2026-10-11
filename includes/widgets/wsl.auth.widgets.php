@@ -248,8 +248,8 @@ function wsl_render_auth_widget( $args = array() )
 			{
 ?>
 
-		<a rel="nofollow" href="<?php echo $authenticate_url; ?>" title="<?php echo sprintf( _wsl__("Connect with %s", 'wordpress-social-login'), $provider_name ) ?>" class="wp-social-login-provider wp-social-login-provider-<?php echo strtolower( $provider_id ); ?>" data-provider="<?php echo $provider_id ?>" role="button">
-			<?php if( $social_icon_set == 'none' ){ echo apply_filters( 'wsl_render_auth_widget_alter_provider_name', $provider_name ); } else { ?><img alt="<?php echo $provider_name ?>" src="<?php echo $assets_base_url . strtolower( $provider_id ) . '.png' ?>" aria-hidden="true" /><?php } ?>
+		<a rel="nofollow" href="<?php echo esc_url( $authenticate_url ); ?>" title="<?php echo esc_attr( sprintf( _wsl__("Connect with %s", 'wordpress-social-login'), $provider_name ) ) ?>" class="wp-social-login-provider wp-social-login-provider-<?php echo esc_attr( strtolower( $provider_id ) ); ?>" data-provider="<?php echo esc_attr( $provider_id ) ?>" role="button">
+			<?php if( $social_icon_set == 'none' ){ echo apply_filters( 'wsl_render_auth_widget_alter_provider_name', $provider_name ); } else { ?><img alt="<?php echo esc_attr( $provider_name ) ?>" src="<?php echo esc_url( $assets_base_url . strtolower( $provider_id ) . '.png' ) ?>" aria-hidden="true" /><?php } ?>
 
 		</a>
 <?php
@@ -396,7 +396,7 @@ function wsl_shortcode_wordpress_social_login_meta( $args = array() )
 		}
 		else
 		{
-			$return = '<img class="wordpress_social_login_meta_user_avatar ' . $css_class . '" src="' . wsl_get_user_custom_avatar( $user_id ) . '" />';
+			$return = '<img class="wordpress_social_login_meta_user_avatar ' . esc_attr( $css_class ) . '" src="' . esc_url( wsl_get_user_custom_avatar( $user_id ) ) . '" />';
 		}
 	}
 
@@ -410,7 +410,7 @@ function wsl_shortcode_wordpress_social_login_meta( $args = array() )
 		}
 		else
 		{
-			$return = '<img class="wordpress_social_login_meta_user_provider ' . $css_class . '" src="' . $assets_base_url . strtolower( $provider ) . '.png"> ' . $provider;
+			$return = '<img class="wordpress_social_login_meta_user_provider ' . esc_attr( $css_class ) . '" src="' . esc_url( $assets_base_url . strtolower( $provider ) . '.png' ) . '"> ' . esc_html( $provider );
 		}
 	}
 
@@ -422,7 +422,7 @@ function wsl_shortcode_wordpress_social_login_meta( $args = array() )
 
 		if( $linked_accounts )
 		{
-			?><table class="wp-social-login-linked-accounts-list <?php echo $css_class; ?>"><?php
+			?><table class="wp-social-login-linked-accounts-list <?php echo esc_attr( $css_class ); ?>"><?php
 
 			foreach( $linked_accounts AS $item )
 			{
@@ -434,7 +434,7 @@ function wsl_shortcode_wordpress_social_login_meta( $args = array() )
 					$identity = $item->identifier;
 				}
 
-				?><tr><td><?php if( $photourl ) { ?><img  style="vertical-align: top;width:16px;height:16px;" src="<?php echo $photourl ?>"> <?php } else { ?><img src="<?php echo $assets_base_url . strtolower(  $item->provider ) . '.png' ?>" /> <?php } ?><?php echo ucfirst( $item->provider ); ?> </td><td><?php echo $identity; ?></td></tr><?php
+				?><tr><td><?php if( $photourl ) { ?><img  style="vertical-align: top;width:16px;height:16px;" src="<?php echo esc_url( $photourl ) ?>"> <?php } else { ?><img src="<?php echo esc_url( $assets_base_url . strtolower(  $item->provider ) . '.png' ) ?>" /> <?php } ?><?php echo esc_html( ucfirst( $item->provider ) ); ?> </td><td><?php echo esc_html( $identity ); ?></td></tr><?php
 
 				echo "\n";
 			}
