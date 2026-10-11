@@ -56,11 +56,14 @@ so none of the issues below have an upstream fix.
 Tracked in [SECURITY.md](SECURITY.md). Patches are welcome.
 
 - Several admin-side components perform state-changing actions without nonce verification (CSRF).
-- `$_REQUEST['redirect_to']` is used without `wp_validate_redirect()` in
-  `includes/services/wsl.authentication.php` and `includes/widgets/wsl.auth.widgets.php`
-  (open-redirect class).
 - The upstream code base is unmaintained; migrating to a maintained social-login provider is
   recommended for the long term.
+
+### Reviewed and found not to be a vulnerability
+
+- **`redirect_to` / open redirect.** `redirect_to` is passed to `wp_safe_redirect()`, which
+  validates the destination against the site's allowed hosts, so external redirect targets are not
+  honoured.
 
 ## [3.0.4] — upstream baseline
 

@@ -32,9 +32,18 @@ Understood, documented, and not yet remediated. Patches are welcome.
 
 | Area | Issue | Class |
 | --- | --- | --- |
-| Admin components | State-changing admin actions without nonce verification | CSRF |
-| `includes/services/wsl.authentication.php`, `includes/widgets/wsl.auth.widgets.php` | `redirect_to` used without `wp_validate_redirect()` | Open redirect |
+| Some admin components | State-changing admin actions without nonce verification | CSRF |
 | Whole plugin | Upstream code base is unmaintained | Long-term risk |
+
+### Reviewed and found not vulnerable
+
+- **`redirect_to` spoofing / open redirect.** The `redirect_to` request parameter is passed to
+  `wp_safe_redirect()` (`includes/services/wsl.authentication.php`), which validates the target
+  against the site's allowed hosts and falls back to the admin URL. External destinations are not
+  honoured. Reviewed 2026-10-11; no change required.
+- **Filesystem access.** As of 3.0.5 the plugin contains no dynamic file reads or writes other than
+  the log viewer, which is constrained by `sanitize_file_name()` and a `realpath()` containment
+  check.
 
 ## Disclosure note
 
